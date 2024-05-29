@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UploadService } from '../services/upload.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UploadDto } from '../dto/upload.dto';
 
 @Controller('upload')
 @ApiTags('Upload')
@@ -11,8 +12,8 @@ export class UploadController {
     description: 'Upload csv data',
     summary: 'Use it to upload the csv data',
   })
-  @Get()
-  async getHello() {
-    return 'hello';
+  @Post()
+  async getHello(@Body() uploadDto: UploadDto) {
+    return uploadDto.data;
   }
 }
