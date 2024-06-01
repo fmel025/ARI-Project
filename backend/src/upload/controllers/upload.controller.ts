@@ -12,8 +12,8 @@ export class UploadController {
     description: 'Upload csv data',
     summary: 'Use it to upload the csv data',
   })
-  @Post()
-  async getHello(@Body() uploadDto: UploadDto) {
-    return uploadDto.data;
+  @Post('parse')
+  async parseCsvDataToJson(@Body() uploadDto: UploadDto) {
+    return this.uploadService.processCsvLine(uploadDto.data[0], ";");
   }
 }
