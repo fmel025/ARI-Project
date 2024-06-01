@@ -1,26 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {
-  ArrayNotEmpty,
-  IsArray,
-  IsNotEmpty,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from 'class-validator';
 
-export class RowDto {
+export class UploadDto {
   @ApiProperty({ type: [String] })
   @IsArray()
   @ArrayNotEmpty()
   @IsString({ each: true })
   @IsNotEmpty({ each: true })
-  row: string[];
-}
+  data: string[];
 
-export class UploadDto {
-  @ApiProperty({ type: [RowDto] })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => RowDto)
-  data: RowDto[];
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  cipherKey: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  delimiter: string;
 }
