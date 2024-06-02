@@ -1,8 +1,11 @@
+import { CsvRowDoc } from '@Upload/doc/csv-row.doc';
+import { UploadCsvDataDto } from '@Upload/dto/upload.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UploadService {
-  processCsvLine(line: string, delimiter: string) {
+  private processCsvLine(line: string, delimiter: string) {
     const begin = line.indexOf('(');
     const end = line.lastIndexOf(')');
 
@@ -24,5 +27,35 @@ export class UploadService {
       data,
       extractedCoordinates,
     };
+  }
+
+  processCsvData(uploadDataDto: UploadCsvDataDto) {
+    const { cipherKey, data, delimiter } = uploadDataDto;
+
+    const formattedData = data.map((line) => {
+      const { data, extractedCoordinates } = this.processCsvLine(
+        line,
+        delimiter,
+      );
+      const columns = data.split(delimiter);
+
+      if (columns.length !== 6) {
+        throw new BadRequestException(
+          'File format is wrong, some data is missing',
+        );
+      }
+
+      const transformedCsvData = plainToInstance(
+        CsvRowDoc,
+        { row: columns },
+        {
+          excludeExtraneousValues: true,
+        },
+      );
+
+      return transformedCsvData;
+    });
+
+    return formattedData;
   }
 }
