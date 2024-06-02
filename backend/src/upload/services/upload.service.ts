@@ -3,7 +3,7 @@ import { UploadCsvDataDto } from '@Upload/dto/upload.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
-import * as crypto from 'crypto';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UploadService {
@@ -34,14 +34,9 @@ export class UploadService {
   }
 
   private encryptPassword(dataToEncrypt: string, cipherKey: string) {
-    const algorithm = this.configService.get<string>('algorithm');
+    const token = jwt.sign({ password: dataToEncrypt }, cipherKey);
 
-    const hashedCard = crypto
-      .createHmac(algorithm, cipherKey)
-      .update(dataToEncrypt)
-      .digest('hex');
-
-    return hashedCard;
+    return token;
   }
 
   processCsvData(uploadDataDto: UploadCsvDataDto) {
