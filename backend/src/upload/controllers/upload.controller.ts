@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { UploadService } from '../services/upload.service';
@@ -13,6 +13,7 @@ export class UploadController {
     description: 'Upload csv data',
     summary: 'Use it to upload the csv data',
   })
+  @HttpCode(200)
   @Post('parse')
   async parseCsvDataToJson(@Body() uploadDto: UploadCsvDataDto) {
     return this.uploadService.processCsvData(uploadDto);

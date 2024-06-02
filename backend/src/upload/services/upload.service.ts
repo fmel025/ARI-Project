@@ -1,5 +1,6 @@
 import { CsvRowDoc } from '@Upload/doc/csv-row.doc';
 import { UploadCsvDataDto } from '@Upload/dto/upload.dto';
+import { GeoJsonType } from '@Upload/types/geo-json.type';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
@@ -39,6 +40,64 @@ export class UploadService {
     return token;
   }
 
+  private convertToGeoJson(input: string): GeoJsonType {
+    const result: GeoJsonType = {
+      type: 'Feature',
+      geometry: {
+        type: '',
+        coordinates: [],
+      },
+    };
+    if (!input.trim()) {
+      throw new BadRequestException('Coordinates data must not be empty');
+    }
+
+    // Remove leading/trailing parentheses and whitespace
+    const cleanedInput = input
+      .trim()
+      .replace(/^[()]/g, '')
+      .replace(/[()]/g, '');
+
+    // Check if the input is a polygon or a point
+    if (cleanedInput.includes(',')) {
+      // It's a polygon
+      const coordinates = cleanedInput
+        .replaceAll(', ', ',')
+        .split(',')
+        .map((pair) => pair.split(' ').map(Number));
+
+        console.log(coordinates);
+      // Validate polygon format
+      const isValidPolygon = coordinates.every(
+        (pair) => pair.length === 2 && !pair.some(isNaN),
+      );
+
+      if (!isValidPolygon) {
+        throw new BadRequestException('Invalid polygon format at csv');
+      }
+
+      result.geometry = {
+        type: 'Polygon',
+        coordinates,
+      };
+    } else {
+      // It's a point
+      const [x, y] = cleanedInput.split(' ').map(Number);
+
+      // Validate point format
+      if (isNaN(x) || isNaN(y)) {
+        throw new BadRequestException('Invalid point format at csv');
+      }
+
+      result.geometry = {
+        type: 'Point',
+        coordinates: [x, y],
+      };
+    }
+
+    return result;
+  }
+
   processCsvData(uploadDataDto: UploadCsvDataDto) {
     const { cipherKey, data, delimiter } = uploadDataDto;
 
@@ -68,7 +127,11 @@ export class UploadService {
         cipherKey,
       );
 
-      return transformedCsvData;
+      const poligono = this.convertToGeoJson(extractedCoordinates);
+      return {
+        ...transformedCsvData,
+        poligono,
+      };
     });
 
     return formattedData;
