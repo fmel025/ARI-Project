@@ -80,8 +80,6 @@ export class UploadService {
         .replaceAll(', ', ',')
         .split(',')
         .map((pair) => pair.split(' ').map(Number));
-
-      console.log(coordinates);
       // Validate polygon format
       const isValidPolygon = coordinates.every(
         (pair) => pair.length === 2 && !pair.some(isNaN),
