@@ -19,7 +19,11 @@ function App() {
     setPasswordValue(target.value);
   };
 
-  const handleCSVUpload = (event) => {
+  const onInputClick = (event) => {
+    event.target.value = '';
+  };
+
+  const handleCsvView = (event) => {
     const file = event.target.files[0];
     if (file) {
       Papa.parse(file, {
@@ -56,7 +60,7 @@ function App() {
         <div className="flex flex-col md:flex-row justify-evenly mb-6 w-full gap-4">
           <div className="flex flex-col justify-center w-full md:w-1/3 mb-4 md:mb-0">
             <label className="font-bold mb-2">Escoja su archivo CSV</label>
-            <input type="file" accept=".csv" onChange={handleCSVUpload} className="w-full p-2 border rounded" />
+            <input type="file" accept=".csv" onChange={handleCsvView} onClick={onInputClick} className="w-full p-2 border rounded" />
           </div>
           <div className="flex flex-col justify-center w-full md:w-1/3 mb-4 md:mb-0">
             <label className="font-bold mb-2">Inserte separador a utilizar</label>
@@ -79,28 +83,9 @@ function App() {
         </div>
         <div className="flex flex-col gap-4 w-full">
           <h2 className="font-bold text-xl mb-2">Contenido del archivo subido CSV</h2>
-          {tableData.length === 0 ? (
-            <h2>Aún no hay datos por mostrar, por favor suba un archivo CSV</h2>
-          ) : (
-            <table className="table-auto w-full border-collapse">
-              <thead>
-                <tr>
-                  {headers.map((header, index) => (
-                    <th key={index} className="border px-4 py-2 bg-darkPurple text-white">{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((cell, cellIndex) => (
-                      <td key={cellIndex} className="border px-4 py-2 bg-naplesYellow">{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <SyntaxHighlighter languaje='csv' style={dark}>
+            {tableData.map(row => row.join(',')).join('\n')}
+          </SyntaxHighlighter>
         </div>
         <div className="flex flex-col gap-5 mt-5">
           <h2 className="font-bold text-xl mb-2">Contenido del archivo generado JSON</h2>
