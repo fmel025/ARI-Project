@@ -29,7 +29,6 @@ Frontend del proyecto de Análisis de Riesgos Informáticos
 ```bash
 $ npm install
 ```
-
 ## Iniciar la aplicación
 
 ```bash
