@@ -30,7 +30,7 @@ function App() {
           setTableData(rows); // Resto de las filas como contenido
 
           // Array para los datos del CSV
-          let linesArray = rows.map(row => row.join(separatorValue)); 
+          let linesArray = rows.map(row => row.join(',')); 
           setCsvLines(linesArray);
           console.log(linesArray);
         },
@@ -104,8 +104,8 @@ function App() {
         </div>
         <div className="flex flex-col gap-5 mt-5">
           <h2 className="font-bold text-xl mb-2">Contenido del archivo generado JSON</h2>
-          // TODO: Here goes the JSON after the API call
-          // By now this is dummy data stracted from the CSV
+           {/* TODO: Here goes the JSON after the API call
+           By now this is dummy data stracted from the CSV */}
           <SyntaxHighlighter language="json" style={dark}>
             {JSON.stringify({ data: csvLines, cipherKey: passwordValue, delimiter: separatorValue }, null, 2)}
           </SyntaxHighlighter>
