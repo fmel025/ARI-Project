@@ -5,6 +5,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
 import * as jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class UploadService {
@@ -40,6 +41,20 @@ export class UploadService {
     return token;
   }
 
+  private encryptPasswordV2(cipherKey: string) {
+    return crypto.createHash('sha256').update(cipherKey).digest();
+  }
+  private encryptData(dataToEncrypt: string, cipherKey: string) {
+    const iv = crypto.randomBytes(16);
+    const password = this.encryptPasswordV2(cipherKey);
+
+    const cipher = crypto.createCipheriv('aes-256-ctr', password, iv);
+
+    let encrypted = cipher.update(dataToEncrypt, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted + ':' + iv.toString('hex');
+  }
+
   private convertToGeoJson(input: string): GeoJsonType {
     const result: GeoJsonType = {
       type: 'Feature',
@@ -65,8 +80,6 @@ export class UploadService {
         .replaceAll(', ', ',')
         .split(',')
         .map((pair) => pair.split(' ').map(Number));
-
-        console.log(coordinates);
       // Validate polygon format
       const isValidPolygon = coordinates.every(
         (pair) => pair.length === 2 && !pair.some(isNaN),
@@ -122,7 +135,7 @@ export class UploadService {
         },
       );
 
-      transformedCsvData.tarjeta = this.encryptPassword(
+      transformedCsvData.tarjeta = this.encryptData(
         transformedCsvData.tarjeta,
         cipherKey,
       );
