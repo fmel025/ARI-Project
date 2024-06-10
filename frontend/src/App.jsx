@@ -55,6 +55,7 @@ function App() {
 
   const handleCopy = () => {
     if(jsonContent==null){
+      notifyEmptyUpload1();
       return;
     }
     navigator.clipboard.writeText(JSON.stringify(jsonContent, null, 2))
@@ -69,6 +70,7 @@ function App() {
 
   const handleDownload = () => {
     if(jsonContent==null){
+      notifyEmptyUpload2();
       return;
     }
     const blob = new Blob([JSON.stringify(jsonContent, null, 2)], { type: 'application/json' });
