@@ -12,6 +12,9 @@ function App() {
   const notifyEmptyFile = () => toast.warning('No se ha seleccionado un archivo CSV');
   const notifyEmptyDelimeter = () => toast.warning('El delimitador solamente puede ser una coma o un punto y coma');
   const notifyEmptyPassword = () => toast.warning('La clave no puede estar vacía'); 
+  const notifyEmptyUpload1 = () => toast.warning('No se ha subido ningun archivo, no se puede copiar nada');
+  const notifyEmptyUpload2 = () => toast.warning('No se ha subido ningun archivo, no se puede descargar nada');
+
 
   const onSeparatorChange = ({ target }) => {
     setDelimiterValue(target.value);
@@ -51,6 +54,9 @@ function App() {
   };
 
   const handleCopy = () => {
+    if(jsonContent==null){
+      return;
+    }
     navigator.clipboard.writeText(JSON.stringify(jsonContent, null, 2))
     .then(() => {
       toast.success('JSON copiado al portapapeles');
@@ -60,6 +66,19 @@ function App() {
       toast.error('Error al copiar JSON al portapapeles');
     }); 
   }
+
+  const handleDownload = () => {
+    if(jsonContent==null){
+      return;
+    }
+    const blob = new Blob([JSON.stringify(jsonContent, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleSubmit = async () => {
     if (csvLines.length === 0) {
@@ -141,7 +160,7 @@ function App() {
           <button onClick={handleCopy} className='btn'>
             Copiar JSON
           </button>
-          <button onClick={null} className="btn">
+          <button onClick={handleDownload} className="btn">
             Descargar JSON
           </button>
         </div>
