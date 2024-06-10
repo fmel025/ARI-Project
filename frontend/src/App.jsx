@@ -2,16 +2,20 @@ import { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function App() {
   const [csvLines, setCsvLines] = useState([]);
-  const [separatorValue, setSeparatorValue] = useState('');
+  const [delimiterValue, setDelimiterValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [jsonContent, setJsonContent] = useState(null);
+  const notifyEmptyFile = () => toast.warning('No se ha seleccionado un archivo CSV');
+  const notifyEmptyDelimeter = () => toast.warning('El delimitador solamente puede ser una coma o un punto y coma');
+  const notifyEmptyPassword = () => toast.warning('La clave no puede estar vacía'); 
 
   const onSeparatorChange = ({ target }) => {
-    setSeparatorValue(target.value);
-    console.log(separatorValue)
+    setDelimiterValue(target.value);
+    console.log(delimiterValue)
   };
 
   const onPasswordChange = ({ target }) => {
@@ -21,7 +25,11 @@ function App() {
 
   const onInputClick = (event) => {
     event.target.value = '';
+    setCsvLines([]);
+    setJsonContent(null);
   };
+
+ 
 
   const handleCsvView = (event) => {
     const file = event.target.files[0];
@@ -42,18 +50,42 @@ function App() {
     }
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(JSON.stringify(jsonContent, null, 2))
+    .then(() => {
+      console.log('JSON copied to clipboard');
+      toast.success('JSON copiado al portapapeles');
+    })
+    .catch((error) => {
+      console.error('Error copying JSON to clipboard:', error);
+      toast.error('Error al copiar JSON al portapapeles');
+    }); 
+  }
+
   const handleSubmit = async () => {
+    if (csvLines.length === 0) {
+      notifyEmptyFile();
+      return;
+    }
+    if (delimiterValue ==! ';' || delimiterValue ==! ',') {
+      notifyEmptyDelimeter();
+      return;
+    }
+    if (passwordValue === '') {
+      notifyEmptyPassword();
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:3000/upload/parse', {
         data: csvLines,
-        delimiter: separatorValue,
+        delimiter: delimiterValue,
         cipherKey: passwordValue,
       }, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      console.log(csvLines, separatorValue, passwordValue);
+      console.log(csvLines, delimiterValue, passwordValue);
       console.log('Response:', response.data);
       setJsonContent(response.data);
     } catch (error) {
@@ -76,7 +108,7 @@ function App() {
             <input
               type="text"
               className="input input-bordered w-full max-w-xs"
-              value={separatorValue}
+              value={delimiterValue}
               onChange={onSeparatorChange}
             />
           </div>
@@ -103,11 +135,14 @@ function App() {
           </SyntaxHighlighter>
         </div>
         <div className="flex justify-center gap-5">
-          <button onClick={handleSubmit} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleSubmit} className="btn ">
             Enviar a la API
           </button>
           {/* TODO: Here goes handleDownload */}
-          <button onClick={null} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleCopy} className='btn'>
+            Copiar JSON
+          </button>
+          <button onClick={null} className="btn">
             Descargar JSON
           </button>
         </div>
