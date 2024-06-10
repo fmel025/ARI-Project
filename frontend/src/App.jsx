@@ -53,7 +53,6 @@ function App() {
   const handleCopy = () => {
     navigator.clipboard.writeText(JSON.stringify(jsonContent, null, 2))
     .then(() => {
-      console.log('JSON copied to clipboard');
       toast.success('JSON copiado al portapapeles');
     })
     .catch((error) => {
