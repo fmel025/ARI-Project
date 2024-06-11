@@ -35,12 +35,6 @@ export class UploadService {
     };
   }
 
-  private encryptPassword(dataToEncrypt: string, cipherKey: string) {
-    const token = jwt.sign({ password: dataToEncrypt }, cipherKey);
-
-    return token;
-  }
-
   private encryptPasswordV2(cipherKey: string) {
     return crypto.createHash('sha256').update(cipherKey).digest();
   }
