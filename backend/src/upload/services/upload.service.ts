@@ -4,7 +4,6 @@ import { GeoJsonType } from '@Upload/types/geo-json.type';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
-import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -36,13 +35,16 @@ export class UploadService {
   }
 
   private encryptPasswordV2(cipherKey: string) {
-    return crypto.createHash('sha256').update(cipherKey).digest();
+    const hashAlgorithm = this.configService.get<string>('hashAlgorithm');
+    return crypto.createHash(hashAlgorithm).update(cipherKey).digest();
   }
+
   private encryptData(dataToEncrypt: string, cipherKey: string) {
     const iv = crypto.randomBytes(16);
     const password = this.encryptPasswordV2(cipherKey);
 
-    const cipher = crypto.createCipheriv('aes-256-ctr', password, iv);
+    const encryptAlgorithm = this.configService.get<string>('encryptAlgorithm');
+    const cipher = crypto.createCipheriv(encryptAlgorithm, password, iv);
 
     let encrypted = cipher.update(dataToEncrypt, 'utf8', 'hex');
     encrypted += cipher.final('hex');
