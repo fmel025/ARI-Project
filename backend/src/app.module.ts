@@ -3,19 +3,18 @@ import { ConfigModule } from '@nestjs/config';
 
 import { UploadModule } from '@Upload/upload.module';
 import configuration from '@Configuration/configuration';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { schema } from '@Configuration/validation-schema';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
+      validationSchema: schema,
       isGlobal: true,
     }),
     UploadModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
