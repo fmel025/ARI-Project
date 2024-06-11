@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark ,dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -183,7 +183,7 @@ function App() {
           <button onClick={handleCopy} className='btn bg-yateBlue text-white'>
             Copiar JSON
           </button>
-          <button onClick={handleDownload} className="btn bg-yateBlue text-white hover:bg-white">
+          <button onClick={handleDownload} className="btn bg-yateBlue text-white">
             Descargar JSON
           </button>
         </div>
