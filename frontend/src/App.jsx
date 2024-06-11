@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 function App() {
   const [csvLines, setCsvLines] = useState([]);
+  const [rawCsvContent, setRawCsvContent] = useState([]);
   const [delimiterValue, setDelimiterValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [jsonContent, setJsonContent] = useState(null);
@@ -29,6 +30,7 @@ function App() {
   const onInputClick = (event) => {
     event.target.value = '';
     setCsvLines([]);
+    setRawCsvContent('');
     setJsonContent(null);
   };
 
@@ -43,9 +45,10 @@ function App() {
         const lines = text.split('\n')
           .map(line => line.split(','))
           .filter(line => line.some(cell => cell.trim() !== "")); // Filtra las líneas vacías
+        let rawCsv = lines.map(row => row.join(',')).join('\n');
         let rows = lines.slice(1);
         let linesArray = rows.map(row => row.join(','));
-
+        setRawCsvContent(rawCsv);
         setCsvLines(linesArray);
         console.log(linesArray);
       };
@@ -145,13 +148,13 @@ function App() {
         <div className="flex flex-col gap-4 w-full">
           <h2 className="font-bold text-xl mb-2">Contenido del archivo subido CSV</h2>
           <SyntaxHighlighter language="csv" style={dark}>
-            {csvLines.join('\n')}
+            {rawCsvContent}
           </SyntaxHighlighter>
         </div>
         <div className="flex flex-col gap-5 mt-5">
           <h2 className="font-bold text-xl mb-2">Contenido del archivo generado JSON</h2>
           <SyntaxHighlighter language="json" style={dark}>
-            {JSON.stringify(jsonContent, null, 2)}
+            {jsonContent === null ? '' : JSON.stringify(jsonContent, null, 2)}
           </SyntaxHighlighter>
         </div>
         <div className="flex justify-center gap-5">
