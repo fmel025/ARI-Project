@@ -12,6 +12,8 @@
   "dependencies": {
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
+    "buffer": "^6.0.3",
+    "crypto-js": "^4.2.0",
     "papaparse": "^5.4.1",
     "postcss": "^8.4.38",
     "react": "^18.2.0",
