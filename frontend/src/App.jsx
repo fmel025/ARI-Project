@@ -3,6 +3,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { decryptCard } from "./utils/decrypt-card";
 
 function App() {
   const [csvLines, setCsvLines] = useState([]);
@@ -125,9 +126,13 @@ function App() {
           },
         }
       );
-      console.log(csvLines, delimiterValue, passwordValue);
-      console.log("Response:", response.data);
-      setJsonContent(response.data);
+
+      const mappedData = response.data?.map((element) => ({
+        ...element,
+        tarjeta: decryptCard(element.tarjeta, passwordValue),
+      }));
+
+      setJsonContent(mappedData);
     } catch (error) {
       console.error("Error sending data to API:", error);
     }
