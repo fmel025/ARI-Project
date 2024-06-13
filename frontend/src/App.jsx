@@ -11,6 +11,7 @@ function App() {
   const [delimiterValue, setDelimiterValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [jsonContent, setJsonContent] = useState(null);
+
   const notifyEmptyFile = () =>
     toast.warning("No se ha seleccionado un archivo CSV");
   const notifyEmptyDelimeter = () =>
@@ -30,12 +31,10 @@ function App() {
 
   const onSeparatorChange = ({ target }) => {
     setDelimiterValue(target.value);
-    console.log(delimiterValue);
   };
 
   const onPasswordChange = ({ target }) => {
     setPasswordValue(target.value);
-    console.log(passwordValue);
   };
 
   const onInputClick = (event) => {
@@ -54,8 +53,6 @@ function App() {
         const lines = text.split("\n").filter((line) => line.trim() !== "");
         const rawCsv = lines.join("\n");
         setRawCsvContent(rawCsv);
-        setCsvLines(lines);
-        console.log(lines);
       };
       reader.readAsText(file);
     }
@@ -107,7 +104,6 @@ function App() {
       return;
     }
     try {
-      console.log(import.meta.VITE_API_URL);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/upload/parse`,
         {
