@@ -98,7 +98,7 @@ function App() {
       notifyEmptyFile();
       return;
     }
-    if (delimiterValue == !";" || delimiterValue == !",") {
+    if (delimiterValue !== ";" && delimiterValue !== ",") {
       notifyEmptyDelimeter();
       return;
     }
