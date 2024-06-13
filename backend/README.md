@@ -22,52 +22,43 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Enlace a la API en internet.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[https://ari-api-project-02b11bc31437.herokuapp.com/docs](https://ari-api-project-02b11bc31437.herokuapp.com/docs)
 
-## Installation
+## Descripción
 
+Esta es la API utilizada dentro del proyecto para realizar la conversion de la data del CSV a un JSON.
+
+## Tecnologías utilizadas
+
+- NodeJS v20.11.0
+- NestJS - Backend framework
+
+## Manual de instalación
+
+Para instalar la API se deben seguir los siguientes pasos:
+
+1. Tener NodeJS instalado.
+2. Ejecutar el siguiente comando dentro de la terminal en el directorio raíz del backend: 
 ```bash
 $ npm install
 ```
+3. Crear un archivo .env dentro del directorio raíz del backend y copiar la información del .dev.env dentro del archivo .env.
 
-## Running the app
+## Ejecutar la API
 
+Para ejecutar la API se debe ejecutar el siguiente comando:
 ```bash
-# development
-$ npm run start
-
-# watch mode
+# Modo de desarrollo
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+Y listo, su api estara corriendo dentro del siguiente enlace: [localhost:3000](http://localhost:3000).
 
-```bash
-# unit tests
-$ npm run test
+## Documentación
 
-# e2e tests
-$ npm run test:e2e
+Si desea acceder a la documentación de los endpoints de la API puede utilizar el enlace de la API en internet o la que ha instalado localmente.
 
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+1. API en internet: [https://ari-api-project-02b11bc31437.herokuapp.com/docs](https://ari-api-project-02b11bc31437.herokuapp.com/docs)
+2. API en local: [http://localhost:3000/docs](http://localhost:3000/docs)
