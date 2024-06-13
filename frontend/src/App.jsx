@@ -51,16 +51,11 @@ function App() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target.result;
-        const lines = text
-          .split("\n")
-          .map((line) => line.split(","))
-          .filter((line) => line.some((cell) => cell.trim() !== "")); // Filtra las líneas vacías
-        let rawCsv = lines.map((row) => row.join(",")).join("\n");
-        let rows = lines.slice(1);
-        let linesArray = rows.map((row) => row.join(","));
+        const lines = text.split("\n").filter((line) => line.trim() !== "");
+        const rawCsv = lines.join("\n");
         setRawCsvContent(rawCsv);
-        setCsvLines(linesArray);
-        console.log(linesArray);
+        setCsvLines(lines);
+        console.log(lines);
       };
       reader.readAsText(file);
     }
