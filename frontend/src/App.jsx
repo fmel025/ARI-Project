@@ -52,6 +52,7 @@ function App() {
         const text = e.target.result;
         const lines = text.split("\n").filter((line) => line.trim() !== "");
         const rawCsv = lines.join("\n");
+        setCsvLines(lines);
         setRawCsvContent(rawCsv);
       };
       reader.readAsText(file);
@@ -125,6 +126,9 @@ function App() {
 
       setJsonContent(mappedData);
     } catch (error) {
+      toast.error(
+        "El formato de tu archivo es invalido, o incompatible con el delimitador enviado"
+      );
       console.error("Error sending data to API:", error);
     }
   };
