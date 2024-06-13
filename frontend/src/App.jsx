@@ -11,6 +11,7 @@ function App() {
   const [delimiterValue, setDelimiterValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [jsonContent, setJsonContent] = useState(null);
+
   const notifyEmptyFile = () =>
     toast.warning("No se ha seleccionado un archivo CSV");
   const notifyEmptyDelimeter = () =>
@@ -30,12 +31,10 @@ function App() {
 
   const onSeparatorChange = ({ target }) => {
     setDelimiterValue(target.value);
-    console.log(delimiterValue);
   };
 
   const onPasswordChange = ({ target }) => {
     setPasswordValue(target.value);
-    console.log(passwordValue);
   };
 
   const onInputClick = (event) => {
@@ -51,16 +50,10 @@ function App() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target.result;
-        const lines = text
-          .split("\n")
-          .map((line) => line.split(","))
-          .filter((line) => line.some((cell) => cell.trim() !== "")); // Filtra las líneas vacías
-        let rawCsv = lines.map((row) => row.join(",")).join("\n");
-        let rows = lines.slice(1);
-        let linesArray = rows.map((row) => row.join(","));
+        const lines = text.split("\n").filter((line) => line.trim() !== "");
+        const rawCsv = lines.join("\n");
+        setCsvLines(lines);
         setRawCsvContent(rawCsv);
-        setCsvLines(linesArray);
-        console.log(linesArray);
       };
       reader.readAsText(file);
     }
@@ -103,7 +96,7 @@ function App() {
       notifyEmptyFile();
       return;
     }
-    if (delimiterValue == !";" || delimiterValue == !",") {
+    if (delimiterValue !== ";" && delimiterValue !== ",") {
       notifyEmptyDelimeter();
       return;
     }
@@ -112,7 +105,6 @@ function App() {
       return;
     }
     try {
-      console.log(import.meta.VITE_API_URL);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/upload/parse`,
         {
@@ -134,6 +126,9 @@ function App() {
 
       setJsonContent(mappedData);
     } catch (error) {
+      toast.error(
+        "El formato de tu archivo es invalido, o incompatible con el delimitador enviado"
+      );
       console.error("Error sending data to API:", error);
     }
   };
