@@ -26,15 +26,30 @@ Frontend del proyecto de Análisis de Riesgos Informáticos
 
 ## Instalación
 
+Para instalar el frontend debes realizar los siguientes pasos:
+
+1. Instalar una version de NodeJS (si aun no ha sido instalada).
+2. Ejecutar el siguiente comando:
 ```bash
 $ npm install
 ```
+3. Copiar los datos del archivo **.dev.env** y luego crear un archivo **.env** dentro de la misma carpeta y colocar la data copiada dentro de ese archivo.
+
+
+Y con esos pasos realizados ya podremos correr nuestra aplicación.
+
 ## Iniciar la aplicación
 
+Para iniciar la aplicación podemos ejecutar los siguientes comandos: 
+
+1. En modo de desarrollo.
 ```bash
 # Modo developer
 $ npm run dev
+```
 
-# Modo produccion
+2. En modo de producción.
+```bash
+# Modo production
 $ npm run build
 ```
